@@ -3,7 +3,8 @@ FROM python:3-alpine
 ADD . /app
 WORKDIR /app
 
-RUN apk add --no-cache --virtual .build gcc musl-dev && \
+RUN apk add --no-cache openssl && \
+    apk add --no-cache --virtual .build gcc musl-dev libffi-dev openssl-dev && \
     pip install -r requirements.txt && \
     apk del .build
 

@@ -1,3 +1,4 @@
 aiohttp==3.*
+aiohttp_session[secure]
 asyncpg
 aiohttp-devtools

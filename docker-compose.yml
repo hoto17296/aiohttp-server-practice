@@ -11,6 +11,7 @@ services:
       - .:/app
     environment:
       DATABASE_URL: postgres://postgres@db/
+      SESSION_SECRET: sc6fmqk4LqM85Uuw7YXHO8ETP3rUuDwZIbtO7dy3-Ac=
     command: adev runserver app
 
   db:
