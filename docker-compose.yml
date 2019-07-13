@@ -12,7 +12,8 @@ services:
     environment:
       DATABASE_URL: postgres://postgres@db/
       SESSION_SECRET: sc6fmqk4LqM85Uuw7YXHO8ETP3rUuDwZIbtO7dy3-Ac=
-    command: adev runserver app
+      STATIC_ROOT_URL: http://localhost:8001/
+    command: adev runserver app --static='static' --static-url=''
 
   db:
     image: postgres:alpine

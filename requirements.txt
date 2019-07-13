@@ -1,4 +1,5 @@
 aiohttp==3.*
 aiohttp_session[secure]
+aiohttp-jinja2
 asyncpg
 aiohttp-devtools

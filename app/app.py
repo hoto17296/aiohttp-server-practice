@@ -2,6 +2,8 @@ import os
 from aiohttp import web
 from aiohttp_session import session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
+import aiohttp_jinja2
+import jinja2
 import asyncpg
 from app.views import routes
 
@@ -14,6 +16,15 @@ async def cleanup(app: web.Application):
 app = web.Application(middlewares=[
     session_middleware(EncryptedCookieStorage(os.environ.get('SESSION_SECRET'))),
 ])
+
+app['name'] = 'AIOHTTP Server Practice'
+
+app['static_root_url'] = os.environ.get('STATIC_ROOT_URL')
+
+jinja2_loader = jinja2.FileSystemLoader('./app/templates')
+aiohttp_jinja2.setup(app, loader=jinja2_loader)
+
 app.add_routes(routes)
+
 app.on_startup.append(startup)
 app.on_cleanup.append(cleanup)
