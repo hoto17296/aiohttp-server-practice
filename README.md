@@ -1,6 +1,6 @@
 # AIOHTTP Server Practice
 
-## Setup
+## Run Dev Server
 ``` console
-$ pip install -r requirements.txt
+$ docker-compose up
 ```
