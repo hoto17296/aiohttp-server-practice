@@ -4,3 +4,8 @@
 ``` console
 $ docker-compose up
 ```
+
+## Init Database
+``` console
+$ docker-compose exec -T db psql -U postgres < schema.sql
+```

@@ -9,4 +9,16 @@ services:
       - 8001:8001
     volumes:
       - .:/app
+    environment:
+      DATABASE_URL: postgres://postgres@db/
     command: adev runserver app
+
+  db:
+    image: postgres:alpine
+    ports:
+      - 15432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:

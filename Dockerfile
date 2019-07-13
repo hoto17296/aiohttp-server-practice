@@ -3,6 +3,8 @@ FROM python:3-alpine
 ADD . /app
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+RUN apk add --no-cache --virtual .build gcc musl-dev && \
+    pip install -r requirements.txt && \
+    apk del .build
 
 CMD ["python", "main.py"]
