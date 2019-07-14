@@ -11,6 +11,7 @@ services:
       - .:/app
     environment:
       DATABASE_URL: postgres://postgres@db/
+      AUTH_SALT: deadbeef
       SESSION_SECRET: sc6fmqk4LqM85Uuw7YXHO8ETP3rUuDwZIbtO7dy3-Ac=
       STATIC_ROOT_URL: http://localhost:8001/
     command: adev runserver app --static='static' --static-url=''

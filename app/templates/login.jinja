@@ -1,0 +1,18 @@
+{% extends 'layout.jinja' %}
+
+{% block content %}
+  <form action="/login" method="post">
+    <div>{{ message }}</div>
+    <div>
+      <label for="id">ID</label>
+      <input id="id" name="id" type="text" />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" />
+    </div>
+    <div>
+      <input type="submit" value="Login" />
+    </div>
+  </form>
+{% endblock %}
