@@ -1,4 +1,5 @@
 import os
+import uvloop
 from aiohttp import web
 from aiohttp_session import session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
@@ -7,6 +8,8 @@ import jinja2
 import asyncpg
 from app.views import routes
 import app.auth as auth
+
+uvloop.install()
 
 async def startup(app: web.Application):
     app['pg'] = await asyncpg.create_pool(dsn=os.environ.get('DATABASE_URL'))
