@@ -40,6 +40,10 @@ async def register(request):
 @template('register.jinja')
 async def post_register(request):
     data = await request.post()
-    await request['auth'].register(data['id'], data['password'])
-    await request['auth'].login(data['id'], data['password'])
-    raise web.HTTPFound('/')
+    try:
+        await request['auth'].register(data['id'], data['password'])
+    except ValueError as e:
+        return {'errors': e.args}
+    else:
+        await request['auth'].login(data['id'], data['password'])
+        raise web.HTTPFound('/')

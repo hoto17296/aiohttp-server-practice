@@ -2,7 +2,14 @@
 
 {% block content %}
   <form action="/register" method="post">
-    <div>{{ message }}</div>
+    {% if errors|length > 0 %}
+      <p>Error:</p>
+      <ul>
+        {% for name, message in errors %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     <div>
       <label for="id">ID</label>
       <input id="id" name="id" type="text" />

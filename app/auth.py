@@ -1,6 +1,10 @@
+import re
 import hashlib
+from logging import getLogger
 from aiohttp import web
 from aiohttp_session import get_session
+
+logger = getLogger(__name__)
 
 def middleware(salt: bytes):
     @web.middleware
@@ -44,8 +48,32 @@ class Auth:
         else:
             return None
 
-    async def register(self, user_id, password):
-        # TODO Validation
+    async def check_user_exists(self, user_id: str) -> bool:
+        query = """
+            SELECT TRUE
+            FROM users
+            WHERE id = $1
+            """
+        return bool(await self.pg.fetchval(query, user_id))
+
+    async def register(self, user_id: str, password: str):
+        # Validation
+        errors = []
+        if len(user_id) == 0:
+            errors.append(('id', 'ID is empty.'))
+        elif not re.match(r'^\w+$', user_id, flags=re.ASCII):
+            errors.append(('id', 'ID can only contain alphabets, numbers and underscores.'))
+        elif await self.check_user_exists(user_id):
+            errors.append(('id', 'This ID has already taken.'))
+        if len(password) == 0:
+            errors.append(('password', 'Password is empty.'))
+        elif len(password) < 8:
+            errors.append(('password', 'Password should be at least 8 characters.'))
+        elif not re.match(r'^[\x21-\x7e]+$', password):
+            errors.append(('password', 'Password should be ASCII string.'))
+        if len(errors) > 0:
+            raise ValueError(*errors)
+
         query = """
             INSERT
             INTO users(id, password_hash)
