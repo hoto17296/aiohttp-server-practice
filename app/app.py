@@ -23,8 +23,11 @@ app['name'] = 'AIOHTTP Server Practice'
 
 app['static_root_url'] = os.environ.get('STATIC_ROOT_URL')
 
-jinja2_loader = jinja2.FileSystemLoader('./app/templates')
-aiohttp_jinja2.setup(app, loader=jinja2_loader)
+aiohttp_jinja2.setup(
+    app,
+    context_processors=[auth.jinja2_context_processor],
+    loader=jinja2.FileSystemLoader('./app/templates')
+)
 
 app.add_routes(routes)
 

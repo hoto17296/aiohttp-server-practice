@@ -10,7 +10,7 @@ routes = web.RouteTableDef()
 async def root(request):
     return {'message': 'Hello, world!'}
 
-@routes.get('/login')
+@routes.get('/login', name='login')
 @template('login.jinja')
 async def login(request):
     if request['auth'].user:
@@ -22,14 +22,15 @@ async def post_login(request):
     data = await request.post()
     if await request['auth'].login(data['id'], data['password']):
         raise web.HTTPFound('/')
+    request.app.logger.warn('Login failed: id={} IP={}'.format(data['id'], request.remote))
     return {'message': 'Invalid ID or Password.'}
 
-@routes.get('/logout')
+@routes.get('/logout', name='logout')
 async def login(request):
     await request['auth'].logout()
     raise web.HTTPFound('/login')
 
-@routes.get('/register')
+@routes.get('/register', name='register')
 @template('register.jinja')
 async def register(request):
     if request['auth'].user:

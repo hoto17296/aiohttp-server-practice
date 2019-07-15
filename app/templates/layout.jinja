@@ -6,8 +6,18 @@
   <link href="{{ static('style.css') }}" rel="stylesheet">
 </head>
 <body>
-  <main>
+  <header>
     <h1>{{ app.name }}</h1>
+    {% if auth.user %}
+      You are logged in as "{{ auth.user.id }}".
+      <a href="{{ url('logout') }}">Logout</a>
+    {% else %}
+      You are not logged in.
+      <a href="{{ url('register') }}">Register</a>
+      <a href="{{ url('login') }}">Login</a>
+    {% endif %}
+  </header>
+  <main>
     {% block content %}{% endblock %}
   </main>
 </body>

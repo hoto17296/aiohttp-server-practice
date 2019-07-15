@@ -10,6 +10,9 @@ def middleware(salt: bytes):
         return await handler(request)
     return auth_middleware
 
+async def jinja2_context_processor(request):
+    return { 'auth': request['auth'] }
+
 def required(func):
     async def wrapper(request, *args, **kwargs):
         if request['auth'].user is None:
