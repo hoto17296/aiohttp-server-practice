@@ -10,40 +10,42 @@ routes = web.RouteTableDef()
 async def root(request):
     return {'message': 'Hello, world!'}
 
-@routes.get('/login', name='login')
-@template('login.jinja')
-async def login(request):
-    if request['auth'].user:
-        raise web.HTTPFound('/')
+@routes.view('/login', name='login')
+class LoginView(web.View):
 
-@routes.post('/login')
-@template('login.jinja')
-async def post_login(request):
-    data = await request.post()
-    if await request['auth'].login(data['id'], data['password']):
-        raise web.HTTPFound('/')
-    request.app.logger.warn('Login failed: id={} IP={}'.format(data['id'], request.remote))
-    return {'message': 'Invalid ID or Password.'}
+    @template('login.jinja')
+    async def get(self):
+        if self.request['auth'].user:
+            raise web.HTTPFound('/')
+
+    @template('login.jinja')
+    async def post(self):
+        data = await self.request.post()
+        if await self.request['auth'].login(data['id'], data['password']):
+            raise web.HTTPFound('/')
+        self.request.app.logger.warn('Login failed: id={} IP={}'.format(data['id'], self.request.remote))
+        return {'message': 'Invalid ID or Password.'}
 
 @routes.get('/logout', name='logout')
 async def login(request):
     await request['auth'].logout()
     raise web.HTTPFound('/login')
 
-@routes.get('/register', name='register')
-@template('register.jinja')
-async def register(request):
-    if request['auth'].user:
-        raise web.HTTPFound('/')
+@routes.view('/register', name='register')
+class RegisterView(web.View):
 
-@routes.post('/register')
-@template('register.jinja')
-async def post_register(request):
-    data = await request.post()
-    try:
-        await request['auth'].register(data['id'], data['password'])
-    except ValueError as e:
-        return {'errors': e.args}
-    else:
-        await request['auth'].login(data['id'], data['password'])
-        raise web.HTTPFound('/')
+    @template('register.jinja')
+    async def get(self):
+        if self.request['auth'].user:
+            raise web.HTTPFound('/')
+
+    @template('register.jinja')
+    async def post(self):
+        data = await self.request.post()
+        try:
+            await self.request['auth'].register(data['id'], data['password'])
+        except ValueError as e:
+            return {'errors': e.args}
+        else:
+            await self.request['auth'].login(data['id'], data['password'])
+            raise web.HTTPFound('/')
