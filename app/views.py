@@ -26,7 +26,7 @@ class LoginView(web.View):
         self.request.app.logger.warn('Login failed: id={} IP={}'.format(data['id'], self.request.remote))
         return {'message': 'Invalid ID or Password.'}
 
-@routes.get('/logout', name='logout')
+@routes.post('/logout', name='logout')
 async def login(request):
     await request['auth'].logout()
     raise web.HTTPFound('/login')

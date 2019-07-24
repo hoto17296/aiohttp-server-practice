@@ -4,13 +4,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ app.name }}</title>
   <link href="{{ static('style.css') }}" rel="stylesheet">
+  <script src="{{ static('script.js') }}"></script>
 </head>
 <body>
   <header>
     <h1>{{ app.name }}</h1>
     {% if auth.user %}
       You are logged in as "{{ auth.user.id }}".
-      <a href="{{ url('logout') }}">Logout</a>
+      <a href="{{ url('logout') }}" onclick="sendPost(event)">Logout</a>
     {% else %}
       You are not logged in.
       <a href="{{ url('register') }}">Register</a>
