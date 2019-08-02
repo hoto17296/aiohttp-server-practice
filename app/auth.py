@@ -2,6 +2,7 @@ import re
 import hashlib
 from logging import getLogger
 from aiohttp import web
+from aiohttp.abc import AbstractView
 from aiohttp_session import get_session
 
 logger = getLogger(__name__)
@@ -18,10 +19,12 @@ async def jinja2_context_processor(request):
     return { 'auth': request['auth'] }
 
 def required(func):
-    async def wrapper(request, *args, **kwargs):
+    async def wrapper(*args, **kwargs):
+        # Supports class based views
+        request = args[0].request if isinstance(args[0], AbstractView) else args[0]
         if request['auth'].user is None:
             raise web.HTTPFound('/login')
-        return await func(request, *args, **kwargs)
+        return await func(*args, **kwargs)
     return wrapper
 
 def password_hash(password: str, salt: bytes) -> str:
